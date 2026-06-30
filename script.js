@@ -282,19 +282,7 @@ const gameStations = [
         timelineYear: -970,
         coordinates: [31.776, 35.234]
     },
-    {
-        id: "hebron_abraham",
-        placeNameHebrew: "חברון",
-        clueText: "קניתי מעפרון החיתי את מערת המכפלה בארבע מאות שקל כסף כדי לקבור כאן את שרה אשתי. איפה אני?",
-        characterName: "אברהם אבינו",
-        sefariaApiUrl: "https://www.sefaria.org/api/texts/Genesis.23.19?context=0",
-        verseReference: "בראשית כ\"ג, י\"ט",
-        fullChapterSefariaRef: "Genesis.23",
-        audioRegular: "https://mechon-mamre.org/mp3/t0123.mp3",
-        characterIcon: "⚰️",
-        timelineYear: -1800,
-        coordinates: [31.532, 35.099]
-    },
+
     {
         id: "jericho_elisha",
         placeNameHebrew: "יריחו",
@@ -321,19 +309,7 @@ const gameStations = [
         timelineYear: -1050,
         coordinates: [32.055, 35.289]
     },
-    {
-        id: "beersheba_abraham",
-        placeNameHebrew: "באר שבע",
-        clueText: "כאן נתתי שבע כבשות כעדות על באר המים שחפרתי, וכרתתי ברית עם מלך הפלשתים.",
-        characterName: "אברהם אבינו",
-        sefariaApiUrl: "https://www.sefaria.org/api/texts/Genesis.22.19?context=0",
-        verseReference: "בראשית כ\"ב, י\"ט",
-        fullChapterSefariaRef: "Genesis.22",
-        audioRegular: "https://mechon-mamre.org/mp3/t0122.mp3",
-        characterIcon: "🤝",
-        timelineYear: -1800,
-        coordinates: [31.252, 34.791]
-    },
+
 
     // --- 15 New Places ---
     {
@@ -362,19 +338,7 @@ const gameStations = [
         timelineYear: -930,
         coordinates: [32.213, 35.271]
     },
-    {
-        id: "bethel_jacob",
-        placeNameHebrew: "בית אל",
-        clueText: "שמתי אבן מראשותיי, וישנתי. בחלום ראיתי סולם שניצב ארצה וראשו מגיע השמיימה, ומלאכים עולים ויורדים בו.",
-        characterName: "יעקב אבינו",
-        sefariaApiUrl: "https://www.sefaria.org/api/texts/Genesis.28.19?context=0",
-        verseReference: "בראשית כ\"ח, י\"ט",
-        fullChapterSefariaRef: "Genesis.28",
-        audioRegular: "https://mechon-mamre.org/mp3/t0128.mp3",
-        characterIcon: "🪜",
-        timelineYear: -1700,
-        coordinates: [31.940, 35.222]
-    },
+
     {
         id: "bethel_jeroboam",
         placeNameHebrew: "בית אל",
@@ -650,19 +614,7 @@ const gameStations = [
         timelineYear: -1030,
         coordinates: [31.823, 35.230]
     },
-    {
-        id: "sodom_lot",
-        placeNameHebrew: "סדום",
-        clueText: "ה' המטיר גופרית ואש על העיר הזו. אשתי הביטה אחורה בבריחתנו והפכה לנציב מלח.",
-        characterName: "לוט",
-        sefariaApiUrl: "https://www.sefaria.org/api/texts/Genesis.19.24?context=0",
-        verseReference: "בראשית י\"ט, כ\"ד",
-        fullChapterSefariaRef: "Genesis.19",
-        audioRegular: "https://mechon-mamre.org/mp3/t0119.mp3",
-        characterIcon: "🧂",
-        timelineYear: -1800,
-        coordinates: [31.077, 35.395]
-    },
+
     {
         id: "shunem_elisha",
         placeNameHebrew: "שונם",
@@ -676,24 +628,11 @@ const gameStations = [
         timelineYear: -800,
         coordinates: [32.604, 35.334]
     },
-    {
-        id: "penuel_jacob",
-        placeNameHebrew: "פנואל (יבוק)",
-        clueText: "נאבקתי כאן עם איש מסתורי עד עלות השחר. הוא ברך אותי ושינה את שמי לישראל.",
-        characterName: "יעקב אבינו",
-        sefariaApiUrl: "https://www.sefaria.org/api/texts/Genesis.32.31?context=0",
-        verseReference: "בראשית ל\"ב, ל\"א",
-        fullChapterSefariaRef: "Genesis.32",
-        audioRegular: "https://mechon-mamre.org/mp3/t0132.mp3",
-        characterIcon: "🤼",
-        timelineYear: -1700,
-        coordinates: [32.185, 35.632]
-    }
+
 ];
 
 const timelineData = [
-    { year: -1800, character: "אברהם ולוט", event: "עקידה, סדום וחברון" },
-    { year: -1700, character: "יעקב אבינו", event: "חלום הסולם והמאבק" },
+
     { year: -1313, character: "משה רבנו", event: "מתן תורה בהר סיני" },
     { year: -1273, character: "יהושע בן נון", event: "כניסה לארץ וכיבושים" },
     { year: -1200, character: "אהוד בן גרא", event: "התנקשות בעגלון מלך מואב" },
@@ -854,7 +793,7 @@ async function embedSpotifyTrack(query) {
         if (data.tracks && data.tracks.items.length > 0) {
             let items = data.tracks.items;
             shuffleArray(items);
-            const selectedItems = items.slice(0, 3);
+            const selectedItems = items.slice(0, 1);
             
             selectedItems.forEach(track => {
                 const trackId = track.id;
@@ -959,9 +898,8 @@ function renderTimeline() {
     const timelineContainer = document.getElementById('timeline-container');
     if (!timelineContainer) return;
     
-    timelineContainer.innerHTML = ''; // Clear previous if any
+    timelineContainer.innerHTML = '';
     
-    // Create line
     const line = document.createElement('div');
     line.id = 'timeline-line';
     timelineContainer.appendChild(line);
@@ -970,45 +908,50 @@ function renderTimeline() {
     const maxYear = timelineData[timelineData.length - 1].year;
     const totalYears = maxYear - minYear;
 
+    let lastLeftPct = -100;
+    let lastRightPct = -100;
+    const minGap = 4.0; // Percentage gap needed to avoid overlap
+
     timelineData.forEach((item, index) => {
-        // Calculate percentage (0 to 100)
-        // With RTL, 0% is right, 100% is left.
-        const padding = 5;
+        const padding = 2;
         const percentage = ((item.year - minYear) / totalYears) * (100 - 2 * padding) + padding;
+
+        // Choose side: default left, but if overlaps with left, move to right
+        let side = 'left';
+        if (percentage - lastLeftPct < minGap) {
+            side = 'right';
+        }
+        
+        if (side === 'left') {
+            lastLeftPct = percentage;
+        } else {
+            lastRightPct = percentage;
+        }
 
         const itemDiv = document.createElement('div');
         itemDiv.className = 'timeline-item';
-        if (index % 2 !== 0) {
-            itemDiv.classList.add('staggered');
+        if (side === 'right') {
+            itemDiv.classList.add('right-side');
         }
-        itemDiv.style.right = `${percentage}%`;
+        itemDiv.style.top = `${percentage}%`;
         itemDiv.setAttribute('data-year', item.year);
 
         const dot = document.createElement('div');
         dot.className = 'timeline-dot';
         itemDiv.appendChild(dot);
 
+        const boxDiv = document.createElement('div');
+        boxDiv.className = 'timeline-content-box';
+        
+        let boxHTML = '';
         if (item.character) {
-            const connectorTop = document.createElement('div');
-            connectorTop.className = 'timeline-connector-top';
-            itemDiv.appendChild(connectorTop);
-
-            const charDiv = document.createElement('div');
-            charDiv.className = 'timeline-character';
-            charDiv.innerHTML = formatMultiline(item.character);
-            itemDiv.appendChild(charDiv);
+            boxHTML += `<div class="timeline-character">${item.character}</div>`;
         }
-
         if (item.event) {
-            const connectorBottom = document.createElement('div');
-            connectorBottom.className = 'timeline-connector-bottom';
-            itemDiv.appendChild(connectorBottom);
-
-            const eventDiv = document.createElement('div');
-            eventDiv.className = 'timeline-event';
-            eventDiv.innerHTML = formatMultiline(item.event);
-            itemDiv.appendChild(eventDiv);
+            boxHTML += `<div class="timeline-event">${item.event}</div>`;
         }
+        boxDiv.innerHTML = boxHTML;
+        itemDiv.appendChild(boxDiv);
         
         timelineContainer.appendChild(itemDiv);
     });
@@ -1154,7 +1097,7 @@ async function handleCorrectAnswer(station) {
                 const wrapper = timelineContainer.parentElement;
                 // item right percentage is known, but scrollLeft works differently in RTL.
                 // ScrollIntoView works best.
-                activeTimelineItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                activeTimelineItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', block: 'center' });
             }
         }
     }

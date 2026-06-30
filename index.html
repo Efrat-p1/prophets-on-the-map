@@ -12,22 +12,25 @@
 </head>
 <body>
     <div id="app">
-        <!-- Header -->
-        <header>
-            <h1>נביאים על המפה!</h1>
-            <div id="score-board">
-                <span>ניקוד: </span>
-                <span id="score-value">0</span>
-            </div>
-        </header>
-
-        <!-- Home Selector Bar -->
-        <div id="home-bar">
-            <span class="home-label">איפה הבית שלי? 🏠</span>
-            <select id="home-city">
-                <option value="">בחר עיר/יישוב כדי להוסיף למפה...</option>
-            </select>
-        </div>
+        <!-- Game Content (Right Side) -->
+        <div id="game-content">
+            <!-- Header -->
+            <header>
+                <!-- Home Selector (Small) -->
+                <div id="home-bar">
+                    <span class="home-label">הבית שלי: 🏠</span>
+                    <select id="home-city">
+                        <option value="">בחר עיר/יישוב...</option>
+                    </select>
+                </div>
+                
+                <h1>נביאים על המפה!</h1>
+                
+                <div id="score-board">
+                    <span>ניקוד: </span>
+                    <span id="score-value">0</span>
+                </div>
+            </header>
 
         <!-- Main Game Area -->
         <main>
@@ -45,7 +48,9 @@
             <div id="map"></div>
         </main>
 
-        <!-- Timeline Wrapper -->
+        </div> <!-- End game-content -->
+
+        <!-- Timeline Wrapper (Left Side) -->
         <div id="timeline-wrapper">
             <div id="timeline-container"></div>
         </div>
@@ -54,10 +59,14 @@
         <div id="result-modal" class="hidden">
             <div class="modal-content">
                 <button id="close-modal">X</button>
-                <h2 id="modal-title">כל הכבוד!</h2>
-                <div id="character-icon">👤</div>
-                <h3 id="character-name"></h3>
-                <div id="place-name" class="place-badge"></div>
+                <div class="modal-header-row">
+                    <div id="character-icon">👤</div>
+                    <div class="modal-header-text">
+                        <h2 id="modal-title">כל הכבוד!</h2>
+                        <h3 id="character-name"></h3>
+                        <div id="place-name" class="place-badge"></div>
+                    </div>
+                </div>
                 <div class="biblical-source-container">
                     <div class="biblical-source primary-source">
                         <p id="verse-text">טוען פסוק...</p>
