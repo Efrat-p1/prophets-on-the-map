@@ -16,12 +16,15 @@
         <div id="game-content">
             <!-- Header -->
             <header>
-                <!-- Home Selector (Small) -->
-                <div id="home-bar">
-                    <span class="home-label">הבית שלי: 🏠</span>
-                    <select id="home-city">
-                        <option value="">בחר עיר/יישוב...</option>
-                    </select>
+                <!-- Utilities: Home Selector & Mute -->
+                <div id="top-utils" style="display: flex; gap: 15px; align-items: center;">
+                    <div id="home-bar">
+                        <span class="home-label">הבית שלי: 🏠</span>
+                        <select id="home-city">
+                            <option value="">בחר עיר/יישוב...</option>
+                        </select>
+                    </div>
+                    <button id="mute-btn" class="mute-btn" title="השתק/הפעל צלילי עזר" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center;">🔊</button>
                 </div>
                 
                 <h1>נביאים על המפה!</h1>
@@ -38,6 +41,7 @@
             <div id="clue-container">
                 <h2 id="clue-title">חידה:</h2>
                 <p id="clue-text">טוען חידה...</p>
+                <p id="ai-credit" class="ai-credit hidden"></p>
                 <div class="clue-buttons">
                     <button id="reveal-btn" class="hint-button">גלה לי את התשובה 💡</button>
                     <button id="skip-btn" class="hint-button">שאלה הבאה ⏭️</button>
@@ -64,6 +68,7 @@
                     <div class="modal-header-text">
                         <h2 id="modal-title">כל הכבוד!</h2>
                         <h3 id="character-name"></h3>
+                        <p id="character-description" class="character-description"></p>
                         <div id="place-name" class="place-badge"></div>
                     </div>
                 </div>
@@ -113,6 +118,6 @@
     
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <script type="module" src="/script.js"></script>
+    <script type="module" src="/src/main.js"></script>
 </body>
 </html>
