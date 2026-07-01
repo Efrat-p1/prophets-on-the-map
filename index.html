@@ -31,7 +31,7 @@
                 
                 <div id="score-board">
                     <span>ניקוד: </span>
-                    <span id="score-value">0</span>
+                    <span id="score-value">0 / 5</span>
                 </div>
             </header>
 
@@ -39,12 +39,32 @@
         <main>
             <!-- Clue Box -->
             <div id="clue-container">
-                <h2 id="clue-title">חידה:</h2>
-                <p id="clue-text">טוען חידה...</p>
-                <p id="ai-credit" class="ai-credit hidden"></p>
-                <div class="clue-buttons">
-                    <button id="reveal-btn" class="hint-button">גלה לי את התשובה 💡</button>
-                    <button id="skip-btn" class="hint-button">שאלה הבאה ⏭️</button>
+                <!-- Start Screen -->
+                <div id="start-screen">
+                    <h2 id="start-title" style="color: var(--primary-color); margin-bottom: 10px;">ברוכים הבאים למשחק!</h2>
+                    <p style="font-size: 1.1rem; line-height: 1.5; margin-bottom: 20px;">
+                        במשחקון זה 5 חידות אקראיות על מפת ארץ ישראל. נחשו היכן התרחשו האירועים התנ"כיים. 
+                        נקודה מוענקת רק אם עניתם נכון בניסיון הראשון, ללא טעויות וללא שימוש ברמז. בהצלחה!
+                    </p>
+                    <button id="start-btn" class="hint-button" style="background: var(--primary-color); color: white;">התחל משחק 🚀</button>
+                </div>
+
+                <!-- Game Screen -->
+                <div id="game-screen" class="hidden">
+                    <h2 id="clue-title">חידה 1 מתוך 5:</h2>
+                    <p id="clue-text">טוען חידה...</p>
+                    <p id="ai-credit" class="ai-credit hidden"></p>
+                    <div class="clue-buttons">
+                        <button id="reveal-btn" class="hint-button">גלה לי את התשובה 💡</button>
+                        <button id="skip-btn" class="hint-button">שאלה הבאה ⏭️</button>
+                    </div>
+                </div>
+
+                <!-- End Screen -->
+                <div id="end-screen" class="hidden">
+                    <h2 id="end-title" style="color: var(--primary-color); margin-bottom: 10px;">סיכום המשחקון</h2>
+                    <p id="end-text" style="font-size: 1.3rem; font-weight: bold; margin-bottom: 20px;"></p>
+                    <button id="restart-btn" class="hint-button" style="background: var(--secondary-color); color: white;">שחק שוב 🔄</button>
                 </div>
             </div>
 
@@ -58,6 +78,9 @@
         <div id="timeline-wrapper">
             <div id="timeline-container"></div>
         </div>
+
+        <!-- Version Label -->
+        <div class="version-label">v.1.0.2</div>
 
         <!-- Result Modal -->
         <div id="result-modal" class="hidden">
@@ -84,7 +107,7 @@
                 </div>
                 <button id="open-chapter-btn" class="secondary-button">📖 קרא והאזן לפרק המלא</button>
                 <div id="spotify-player-container"></div>
-                <button id="next-button">לחידה הבאה 🚀</button>
+                <button id="next-button">חזור למפה 🗺️</button>
             </div>
         </div>
         

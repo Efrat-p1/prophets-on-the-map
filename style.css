@@ -788,3 +788,13 @@ main {
 #spotify-player-container iframe {
     border-radius: 12px;
 }
+
+.version-label {
+    position: fixed;
+    bottom: 5px;
+    left: 10px;
+    font-size: 0.75rem;
+    color: rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+    z-index: 1000;
+}

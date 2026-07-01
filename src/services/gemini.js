@@ -4,7 +4,7 @@ function incrementAndGetDailyUsage() {
     const today = new Date().toISOString().split('T')[0];
     let usageData = JSON.parse(localStorage.getItem('gemini_daily_usage') || '{}');
     
-    if (usageData.date !== today) {
+    if (usageData.date !== today || usageData.count > 1000) {
         usageData = { date: today, count: 0 };
     }
     
@@ -30,7 +30,7 @@ export async function generateClueFromGemini(placeName, characterName, fallbackT
 חשוב מאוד: אל תכתוב את השם '${placeName}' בתוך החידה בשום אופן.`;
         
         const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
         
         let retries = 3;
         let generatedText = "";
@@ -61,8 +61,7 @@ export async function generateClueFromGemini(placeName, characterName, fallbackT
         const today = new Date().toISOString().split('T')[0];
         let usageData = JSON.parse(localStorage.getItem('gemini_daily_usage') || '{}');
         
-        // If we hit a 429 quota limit, we know the true server usage is at least 20.
-        // Sync our local counter if it's currently lower than 20.
+        // If we hit a 429 quota limit, we know they hit the 20 requests per day limit.
         if (e.message && e.message.includes("429")) {
             if (!usageData.count || usageData.count < 20) {
                 usageData.count = 20;

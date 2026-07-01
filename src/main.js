@@ -20,6 +20,8 @@ let currentStationIndex = 0;
 let score = 0;
 let currentStationForChapter = null;
 let isMuted = false;
+let sessionStations = [];
+let hasMadeMistake = false;
 
 // DOM Elements
 const clueTextElement = document.getElementById('clue-text');
@@ -31,6 +33,11 @@ const closeModalBtn = document.getElementById('close-modal');
 const nextBtn = document.getElementById('next-button');
 const revealBtn = document.getElementById('reveal-btn');
 const skipBtn = document.getElementById('skip-btn');
+const startBtn = document.getElementById('start-btn');
+const restartBtn = document.getElementById('restart-btn');
+const startScreen = document.getElementById('start-screen');
+const gameScreen = document.getElementById('game-screen');
+const endScreen = document.getElementById('end-screen');
 
 const modalTitle = document.getElementById('modal-title');
 const characterIcon = document.getElementById('character-icon');
@@ -59,21 +66,34 @@ const errorSound = document.getElementById('error-sound');
 const muteBtn = document.getElementById('mute-btn');
 
 function initGame() {
-    // Shuffle the stations so the game order is random every time
-    shuffleArray(gameStations);
-    
     initLeafletMap();
-    loadCurrentStation();
     renderTimeline();
     initHomeSelector();
     
     closeModalBtn.addEventListener('click', hideModal);
-    nextBtn.addEventListener('click', handleNextStation);
+    nextBtn.addEventListener('click', hideModal); // Next modal button just closes it now
     revealBtn.addEventListener('click', handleRevealAnswer);
-    skipBtn.addEventListener('click', handleNextStation);
+    skipBtn.addEventListener('click', handleNextStation); // Main UI skip to next question
+    if (startBtn) startBtn.addEventListener('click', startGame);
+    if (restartBtn) restartBtn.addEventListener('click', startGame);
     if (muteBtn) {
         muteBtn.addEventListener('click', toggleMute);
     }
+}
+
+function startGame() {
+    shuffleArray(gameStations);
+    sessionStations = gameStations.slice(0, 5);
+    currentStationIndex = 0;
+    score = 0;
+    hasMadeMistake = false;
+    scoreValueElement.textContent = `0 / 5`;
+    
+    startScreen.classList.add('hidden');
+    endScreen.classList.add('hidden');
+    gameScreen.classList.remove('hidden');
+    
+    loadCurrentStation();
 }
 
 function toggleMute() {
@@ -177,16 +197,16 @@ function renderTimeline() {
 }
 
 async function loadCurrentStation() {
-    if (currentStationIndex >= gameStations.length) {
-        clueTextElement.textContent = "סיימתם את כל החידות! כל הכבוד! 🎉";
-        document.getElementById('clue-title').textContent = "ניצחון!";
-        aiCreditElement.classList.add('hidden');
-        clearMapPins();
+    if (currentStationIndex >= 5) {
+        showEndScreen();
         return;
     }
-    const station = gameStations[currentStationIndex];
+    const station = sessionStations[currentStationIndex];
+    document.getElementById('clue-title').textContent = `חידה ${currentStationIndex + 1} מתוך 5:`;
     clueTextElement.textContent = "טוען חידה...";
     aiCreditElement.classList.add('hidden');
+    
+    hasMadeMistake = false; // reset for this question
     
     renderMapPins(station, handlePinClick);
     
@@ -228,10 +248,25 @@ function getTimeUntilReset() {
     aiCreditElement.classList.remove('hidden');
 }
 
-async function handlePinClick(clickedId) {
-    if (currentStationIndex >= gameStations.length) return;
+function showEndScreen() {
+    gameScreen.classList.add('hidden');
+    endScreen.classList.remove('hidden');
+    clearMapPins();
     
-    const currentStation = gameStations[currentStationIndex];
+    const endText = document.getElementById('end-text');
+    if (score === 5) {
+        endText.textContent = `מושלם! כל הכבוד! 🏆 (ציון: 5/5)`;
+    } else if (score >= 3) {
+        endText.textContent = `יפה מאוד! שליטה מרשימה! ⭐ (ציון: ${score}/5)`;
+    } else {
+        endText.textContent = `טעון שיפור... אפשר לנסות שוב! 💪 (ציון: ${score}/5)`;
+    }
+}
+
+async function handlePinClick(clickedId) {
+    if (currentStationIndex >= 5) return;
+    
+    const currentStation = sessionStations[currentStationIndex];
     
     if (clickedId === currentStation.id) {
         handleCorrectAnswer(currentStation);
@@ -241,6 +276,7 @@ async function handlePinClick(clickedId) {
 }
 
 function handleIncorrectAnswer() {
+    hasMadeMistake = true;
     if (!isMuted) {
         errorSound.currentTime = 0;
         errorSound.play().catch(e => console.log("Audio play blocked"));
@@ -252,14 +288,17 @@ function handleIncorrectAnswer() {
 }
 
 function handleRevealAnswer() {
-    if (currentStationIndex >= gameStations.length) return;
-    const currentStation = gameStations[currentStationIndex];
+    hasMadeMistake = true;
+    if (currentStationIndex >= 5) return;
+    const currentStation = sessionStations[currentStationIndex];
     highlightMarkerAndPan(currentStation.id, currentStation.coordinates);
 }
 
 async function handleCorrectAnswer(station) {
-    score += 10;
-    scoreValueElement.textContent = score;
+    if (!hasMadeMistake) {
+        score += 1;
+    }
+    scoreValueElement.textContent = `${score} / 5`;
     currentStationForChapter = station;
     
     if (!isMuted) {
