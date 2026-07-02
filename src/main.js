@@ -262,9 +262,9 @@ async function loadCurrentStation() {
     }
 
     if (station.isAI) {
-        aiCreditElement.textContent = `✨ חידות אלו נוצרו מראש על ידי בינה מלאכותית (Google Gemini). (בקשה ${station.dailyUsage || 1} להיום)`;
+        aiCreditElement.textContent = `✨ חידות אלו נוצרו עכשיו על ידי בינה מלאכותית (Google Gemini). (בקשה ${station.dailyUsage || 1} להיום ממכשיר זה)`;
     } else {
-        let fallbackMsg = `💡 השרתים עמוסים כרגע. מוצגת חידת גיבוי מובנית במערכת. (ניסיון ${station.dailyUsage || 1} להיום)`;
+        let fallbackMsg = `💡 השרתים עמוסים כרגע. מוצגת חידת גיבוי מובנית במערכת. (ניסיון ${station.dailyUsage || 1} להיום ממכשיר זה)`;
         if (station.dailyUsage >= 20) {
              fallbackMsg += `<br>המכסה תתחדש בעוד ${getTimeUntilReset()}.`;
         }
@@ -390,6 +390,7 @@ if (openChapterBtn) {
         if (currentStationForChapter.audioRegular) {
             regularAudioContainer.classList.remove('hidden');
             audioRegular.src = currentStationForChapter.audioRegular;
+            audioRegular.load();
         } else {
             regularAudioContainer.classList.add('hidden');
             audioRegular.src = "";
@@ -398,6 +399,7 @@ if (openChapterBtn) {
         if (currentStationForChapter.audioYemenite) {
             yemeniteAudioContainer.classList.remove('hidden');
             audioYemenite.src = currentStationForChapter.audioYemenite;
+            audioYemenite.load();
         } else {
             yemeniteAudioContainer.classList.add('hidden');
             audioYemenite.src = "";
