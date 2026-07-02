@@ -3,7 +3,7 @@ import { timelineData } from './data/timeline.js';
 import { israelCities } from './data/cities.js';
 import { charactersInfo } from './data/characters.js';
 import { embedSpotifyTrack } from './services/spotify.js';
-import { generateClueFromGemini } from './services/gemini.js';
+import { generateClueFromGemini, generateAllCluesFromGemini } from './services/gemini.js';
 import { fetchVerse, fetchChapter } from './services/sefaria.js';
 import { initLeafletMap, renderMapPins, updateHomeMarker, clearMapPins, highlightMarkerAndPan } from './map.js';
 
@@ -38,6 +38,8 @@ const restartBtn = document.getElementById('restart-btn');
 const startScreen = document.getElementById('start-screen');
 const gameScreen = document.getElementById('game-screen');
 const endScreen = document.getElementById('end-screen');
+const loadingSpinner = document.getElementById('loading-spinner');
+const clueButtonsContainer = document.querySelector('.clue-buttons');
 
 const modalTitle = document.getElementById('modal-title');
 const characterIcon = document.getElementById('character-icon');
@@ -81,7 +83,7 @@ function initGame() {
     }
 }
 
-function startGame() {
+async function startGame() {
     shuffleArray(gameStations);
     sessionStations = gameStations.slice(0, 5);
     currentStationIndex = 0;
@@ -92,6 +94,27 @@ function startGame() {
     startScreen.classList.add('hidden');
     endScreen.classList.add('hidden');
     gameScreen.classList.remove('hidden');
+    
+    document.getElementById('clue-title').textContent = `מכין משחק...`;
+    
+    if (loadingSpinner) loadingSpinner.classList.remove('hidden');
+    clueTextElement.classList.add('hidden');
+    if (clueButtonsContainer) clueButtonsContainer.classList.add('hidden');
+    aiCreditElement.classList.add('hidden');
+    
+    const stationPrompts = sessionStations.map(s => ({
+        place: s.placeNameHebrew, 
+        character: s.characterName,
+        fallbackText: s.fallbackText
+    }));
+    
+    const allCluesResult = await generateAllCluesFromGemini(stationPrompts);
+    
+    sessionStations.forEach((station, index) => {
+        station.generatedClue = allCluesResult.clues[index];
+        station.isAI = allCluesResult.isAI;
+        station.dailyUsage = allCluesResult.dailyUsage;
+    });
     
     loadCurrentStation();
 }
@@ -203,44 +226,46 @@ async function loadCurrentStation() {
     }
     const station = sessionStations[currentStationIndex];
     document.getElementById('clue-title').textContent = `חידה ${currentStationIndex + 1} מתוך 5:`;
-    clueTextElement.textContent = "טוען חידה...";
     aiCreditElement.classList.add('hidden');
+    
+    if (loadingSpinner) loadingSpinner.classList.add('hidden');
+    clueTextElement.classList.remove('hidden');
+    if (clueButtonsContainer) clueButtonsContainer.classList.remove('hidden');
     
     hasMadeMistake = false; // reset for this question
     
     renderMapPins(station, handlePinClick);
     
-    const newClueData = await generateClueFromGemini(station.placeNameHebrew, station.characterName, station.fallbackText);
-    clueTextElement.textContent = newClueData.text;
+    clueTextElement.textContent = station.generatedClue || "שגיאה בטעינת החידה.";
     
-function getTimeUntilReset() {
-    const now = new Date();
-    const formatter = new Intl.DateTimeFormat('en-US', {
-        timeZone: 'America/Los_Angeles',
-        year: 'numeric', month: 'numeric', day: 'numeric',
-        hour: 'numeric', minute: 'numeric', second: 'numeric',
-        hour12: false,
-    });
-    const parts = formatter.formatToParts(now);
-    const p = {};
-    parts.forEach(({ type, value }) => { p[type] = value; });
-    
-    let hour = parseInt(p.hour);
-    if (hour === 24) hour = 0; // handle 24:00 formatting
-    
-    const hoursLeft = 23 - hour;
-    const minsLeft = 59 - parseInt(p.minute);
-    
-    if (hoursLeft === 0 && minsLeft === 0) return "פחות מדקה";
-    if (hoursLeft === 0) return `כ-${minsLeft} דקות`;
-    return `כ-${hoursLeft} שעות ו-${minsLeft} דקות`;
-}
+    function getTimeUntilReset() {
+        const now = new Date();
+        const formatter = new Intl.DateTimeFormat('en-US', {
+            timeZone: 'America/Los_Angeles',
+            year: 'numeric', month: 'numeric', day: 'numeric',
+            hour: 'numeric', minute: 'numeric', second: 'numeric',
+            hour12: false,
+        });
+        const parts = formatter.formatToParts(now);
+        const p = {};
+        parts.forEach(({ type, value }) => { p[type] = value; });
+        
+        let hour = parseInt(p.hour);
+        if (hour === 24) hour = 0; // handle 24:00 formatting
+        
+        const hoursLeft = 23 - hour;
+        const minsLeft = 59 - parseInt(p.minute);
+        
+        if (hoursLeft === 0 && minsLeft === 0) return "פחות מדקה";
+        if (hoursLeft === 0) return `כ-${minsLeft} דקות`;
+        return `כ-${hoursLeft} שעות ו-${minsLeft} דקות`;
+    }
 
-    if (newClueData.isAI) {
-        aiCreditElement.textContent = `✨ חידה זו נוצרה הרגע על ידי בינה מלאכותית (Google Gemini). (בקשה ${newClueData.dailyUsage || 1} להיום)`;
+    if (station.isAI) {
+        aiCreditElement.textContent = `✨ חידות אלו נוצרו מראש על ידי בינה מלאכותית (Google Gemini). (בקשה ${station.dailyUsage || 1} להיום)`;
     } else {
-        let fallbackMsg = `💡 השרתים עמוסים כרגע. מוצגת חידת גיבוי מובנית במערכת. (ניסיון ${newClueData.dailyUsage || 1} להיום)`;
-        if (newClueData.dailyUsage >= 20) {
+        let fallbackMsg = `💡 השרתים עמוסים כרגע. מוצגת חידת גיבוי מובנית במערכת. (ניסיון ${station.dailyUsage || 1} להיום)`;
+        if (station.dailyUsage >= 20) {
              fallbackMsg += `<br>המכסה תתחדש בעוד ${getTimeUntilReset()}.`;
         }
         aiCreditElement.innerHTML = fallbackMsg;

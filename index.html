@@ -52,11 +52,15 @@
                 <!-- Game Screen -->
                 <div id="game-screen" class="hidden">
                     <h2 id="clue-title">חידה 1 מתוך 5:</h2>
+                    <div id="loading-spinner" class="spinner-container hidden">
+                        <div class="ai-spinner"></div>
+                        <p class="spinner-text">מכין אתגרים, אנא המתן...</p>
+                    </div>
                     <p id="clue-text">טוען חידה...</p>
                     <p id="ai-credit" class="ai-credit hidden"></p>
                     <div class="clue-buttons">
-                        <button id="reveal-btn" class="hint-button">גלה לי את התשובה 💡</button>
                         <button id="skip-btn" class="hint-button">שאלה הבאה ⏭️</button>
+                        <button id="reveal-btn" class="hint-button small-hint-button">גלה לי את התשובה 💡</button>
                     </div>
                 </div>
 
