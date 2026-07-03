@@ -616,6 +616,47 @@ main {
 }
 
 /* Responsive adjustments */
+@media (max-width: 767px) {
+    header {
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 10px;
+    }
+    h1 {
+        width: 100%;
+        text-align: center;
+        font-size: 1.8rem;
+        order: -1;
+        margin-bottom: 5px;
+    }
+    #top-utils {
+        order: 1;
+    }
+    #score-board {
+        order: 2;
+        font-size: 1.2rem;
+        padding: 5px 15px;
+    }
+    #clue-text {
+        font-size: 1.15rem;
+        margin-bottom: 15px;
+    }
+    .hint-button {
+        padding: 8px 15px;
+        font-size: 0.95rem;
+    }
+    #map {
+        min-height: 250px;
+    }
+    #clue-container {
+        padding: 15px;
+    }
+    #app {
+        padding: 10px;
+        gap: 10px;
+    }
+}
+
 @media (min-width: 768px) {
     main {
         flex-direction: row;
@@ -732,6 +773,30 @@ main {
         position: relative;
         border-right: 2px solid rgba(0,0,0,0.05);
         padding-right: 5px;
+    }
+}
+
+/* Allow scrolling on mobile/tablet so stacked layout works */
+@media (max-width: 1023px) {
+    body {
+        height: auto;
+        min-height: 100vh;
+        overflow-y: auto;
+    }
+    #app {
+        height: auto;
+        min-height: 100vh;
+        overflow: visible;
+    }
+    #game-content {
+        min-height: 100vh;
+        height: auto;
+    }
+    #timeline-wrapper {
+        height: 500px;
+        min-height: 500px;
+        margin-top: 20px;
+        flex: none;
     }
 }
 
